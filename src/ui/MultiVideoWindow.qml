@@ -16,6 +16,8 @@ import QGroundControl.FactControls      1.0
 
 import org.freedesktop.gstreamer.GLVideoItem 1.0
 
+import "." as QGroundMain;
+
 ApplicationWindow {
     id:             multiVideoWindow
     title:          "Multi-Video Context"
@@ -26,6 +28,10 @@ ApplicationWindow {
 //    maximumWidth:   width
 //    maximumHeight:  height
     visible:        true
+
+    onClosing: function() {
+        QGroundControl.videoManager.stopMultiCamRecording();
+    }
 
     Item {
         anchors.fill: parent
@@ -162,16 +168,16 @@ ApplicationWindow {
 
         function timeItemFormat(num) {
             var result = "";
-            var milliseconds = Math.floor(num % 1000);
+            var milliseconds = Math.floor(num % 100);
             var seconds = Math.floor(num / 1000 % 60);
             var minutes = Math.floor(num / 1000 / 60);
-            result = pad(minutes, 2) + ":" + pad(seconds, 2) + ":" + pad(milliseconds, 3);
+            result = pad(minutes, 2) + ":" + pad(seconds, 2) + ":" + pad(milliseconds, 2);
             return result;
         }
 
         Timer {
             id: timer
-            interval: 10
+            interval: 1
             running: false
             repeat: true
             onTriggered: function() {

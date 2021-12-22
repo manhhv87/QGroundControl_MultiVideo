@@ -58,6 +58,8 @@ public:
     Q_PROPERTY(bool             recording               READ    recording                                   NOTIFY recordingChanged)
     Q_PROPERTY(QSize            videoSize               READ    videoSize                                   NOTIFY videoSizeChanged)
 
+    // TODO: decodingChanged for multi-cam
+
     virtual bool        hasVideo            ();
     virtual bool        isGStreamer         ();
     virtual bool        isTaisync           () { return _isTaisync; }
