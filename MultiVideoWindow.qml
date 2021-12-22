@@ -21,10 +21,10 @@ ApplicationWindow {
     title:          "Multi-Video Context"
     width:          1280
     height:         720
-    minimumWidth:   width
-    minimumHeight:  height
-    maximumWidth:   width
-    maximumHeight:  height
+//    minimumWidth:   width
+//    minimumHeight:  height
+//    maximumWidth:   width
+//    maximumHeight:  height
     visible:        true
 
     Item {

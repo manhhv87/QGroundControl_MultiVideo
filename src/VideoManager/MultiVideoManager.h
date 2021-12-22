@@ -36,6 +36,7 @@ private:
     VideoReceiver* _videoReceiver[QGC_MULTI_VIDEO_COUNT] = { nullptr, nullptr, nullptr };
     void*          _videoSink[QGC_MULTI_VIDEO_COUNT]     = { nullptr, nullptr, nullptr };
     QString        _videoUri[QGC_MULTI_VIDEO_COUNT]      = { nullptr, nullptr, nullptr };
+    bool           _hasVideo[QGC_MULTI_VIDEO_COUNT]      = { false, false, false };
 
     VideoSettings* _videoSettings = nullptr;
 

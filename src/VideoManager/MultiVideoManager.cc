@@ -32,6 +32,7 @@ void MultiVideoManager::_setupReceiver(QGCToolbox *toolbox, unsigned int id)
     connect(_videoReceiver[id], &VideoReceiver::onStartComplete, this, [this, id](VideoReceiver::STATUS status) {
         if (status == VideoReceiver::STATUS_OK) {
            qCDebug(VideoManagerLog) << "Started";
+           _hasVideo[id] = true;
            if (_videoSink[id] != nullptr) {
                 _videoReceiver[id]->startDecoding(_videoSink[id]);
                 qCDebug(VideoManagerLog) << "Decoding";
@@ -129,9 +130,16 @@ void MultiVideoManager::startRecording(const QString &videoFile) {
     // TODO: check for videoStarted
 
     for (int i = 0; i < QGC_MULTI_VIDEO_COUNT; i++) {
+        if (!_hasVideo[i]) {
+            qCDebug(VideoManagerLog) << "Does not have video";
+            continue;
+        }
         QString _videoFile = savePath + "/"
                 + (videoFile.isEmpty() ? QDateTime::currentDateTime().toString("yyyy-MM-dd_hh.mm.ss") : videoFile);
-        _videoFile = QStringLiteral("%1_%2").arg(_videoFile).arg(i) + ".";
+        QDir dir(QStringLiteral("%1").arg(_videoFile));
+        if (!dir.exists())
+            dir.mkpath(".");
+        _videoFile = QStringLiteral("%1/CAM%2").arg(_videoFile).arg(i) + ".";
         qCDebug(VideoManagerLog) << "Video File: " << _videoFile;
         _videoFile += ext;
         _videoReceiver[i]->startRecording(_videoFile, fileFormat);
