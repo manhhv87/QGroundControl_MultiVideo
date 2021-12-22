@@ -59,6 +59,9 @@ public:
     Q_PROPERTY(QSize            videoSize               READ    videoSize                                   NOTIFY videoSizeChanged)
 
     // TODO: decodingChanged for multi-cam
+    Q_PROPERTY(bool             decoding0               READ    decoding0                                   NOTIFY decodingChanged0)
+    Q_PROPERTY(bool             decoding1               READ    decoding1                                   NOTIFY decodingChanged1)
+    Q_PROPERTY(bool             decoding2               READ    decoding2                                   NOTIFY decodingChanged2)
 
     virtual bool        hasVideo            ();
     virtual bool        isGStreamer         ();
@@ -79,6 +82,21 @@ public:
 
     bool decoding(void) {
         return _decoding;
+    }
+
+    bool decoding0(void) {
+        qCDebug(VideoManagerLog) << "Has video 0: " << _multiVideoManager->_hasVideo[0];
+        return _multiVideoManager->_hasVideo[0];
+    }
+
+    bool decoding1(void) {
+        qCDebug(VideoManagerLog) << "Has video 1: " << _multiVideoManager->_hasVideo[1];
+        return _multiVideoManager->_hasVideo[1];
+    }
+
+    bool decoding2(void) {
+        qCDebug(VideoManagerLog) << "Has video 2: " << _multiVideoManager->_hasVideo[2];
+        return _multiVideoManager->_hasVideo[2];
     }
 
     bool recording(void) {
@@ -134,6 +152,10 @@ signals:
     void recordingChanged           ();
     void recordingStarted           ();
     void videoSizeChanged           ();
+
+    void decodingChanged0           ();
+    void decodingChanged1           ();
+    void decodingChanged2           ();
 
 protected slots:
     void _videoSourceChanged        ();

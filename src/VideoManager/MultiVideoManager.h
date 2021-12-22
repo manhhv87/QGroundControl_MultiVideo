@@ -20,7 +20,7 @@ class MultiVideoManager : public QGCTool
     Q_OBJECT
 
 public:
-    MultiVideoManager(QGCApplication* app, QGCToolbox* toolbox);
+    MultiVideoManager(QGCApplication* app, QGCToolbox* toolbox, VideoManager* videoManager);
 
 public:
     void init                        ();
@@ -37,6 +37,7 @@ private:
     void*          _videoSink[QGC_MULTI_VIDEO_COUNT]     = { nullptr, nullptr, nullptr };
     QString        _videoUri[QGC_MULTI_VIDEO_COUNT]      = { nullptr, nullptr, nullptr };
     bool           _hasVideo[QGC_MULTI_VIDEO_COUNT]      = { false, false, false };
+    VideoManager*  _videoManager                         = nullptr;
 
     VideoSettings* _videoSettings = nullptr;
 
@@ -47,6 +48,8 @@ private:
     void _restartVideo(unsigned int id);
 
     void _udpPortChanged();
+
+    friend class VideoManager;
 };
 
 #endif // MULTIVIDEOMANAGER_H

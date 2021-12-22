@@ -105,7 +105,7 @@ VideoManager::setToolbox(QGCToolbox *toolbox)
    MultiVehicleManager *pVehicleMgr = qgcApp()->toolbox()->multiVehicleManager();
    connect(pVehicleMgr, &MultiVehicleManager::activeVehicleChanged, this, &VideoManager::_setActiveVehicle);
 
-   _multiVideoManager = new MultiVideoManager(_app, _toolbox);
+   _multiVideoManager = new MultiVideoManager(_app, _toolbox, this);
    _multiVideoManager->setToolbox(toolbox);
 
 #if defined(QGC_GST_STREAMING)

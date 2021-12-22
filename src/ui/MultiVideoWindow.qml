@@ -36,11 +36,20 @@ ApplicationWindow {
     Item {
         anchors.fill: parent
         Rectangle {
-            width: parent.width/2
-            height: parent.height/2
-            x: 0
-            y: 0
-            color: "#000000"
+            id:             noVideo0
+            width:          parent.width/2
+            height:         parent.height/2
+            x:              0
+            y:              0
+            color:          Qt.rgba(0,0,0,0.75)
+            visible:        !(QGroundControl.videoManager.decoding0)
+            QGCLabel {
+                text:               qsTr("WAITING FOR VIDEO")
+                font.family:        ScreenTools.demiboldFontFamily
+                color:              "white"
+                font.pointSize:     ScreenTools.largeFontPointSize
+                anchors.centerIn:   parent
+            }
         }
         GstGLVideoItem {
             objectName: "videoContent0"
@@ -49,17 +58,27 @@ ApplicationWindow {
             x: 0
             y: 0
             property var receiver
+            visible: QGroundControl.videoManager.decoding0
         }
     }
 
     Item {
         anchors.fill: parent
         Rectangle {
-            width: parent.width/2
-            height: parent.height/2
-            x: parent.width/2
-            y: 0
-            color: "#000000"
+            id:             noVideo1
+            width:          parent.width/2
+            height:         parent.height/2
+            x:              parent.width/2
+            y:              0
+            color:          Qt.rgba(0,0,0,0.75)
+            visible:        !(QGroundControl.videoManager.decoding1)
+            QGCLabel {
+                text:               qsTr("WAITING FOR VIDEO")
+                font.family:        ScreenTools.demiboldFontFamily
+                color:              "white"
+                font.pointSize:     ScreenTools.largeFontPointSize
+                anchors.centerIn:   parent
+            }
         }
         GstGLVideoItem {
             objectName: "videoContent1"
@@ -68,17 +87,27 @@ ApplicationWindow {
             x: parent.width/2
             y: 0
             property var receiver
+            visible: QGroundControl.videoManager.decoding1
         }
     }
 
     Item {
         anchors.fill: parent
         Rectangle {
-            width: parent.width/2
-            height: parent.height/2
-            x: parent.width/4
-            y: parent.height/2
-            color: "#000000"
+            id:             noVideo2
+            width:          parent.width/2
+            height:         parent.height/2
+            x:              parent.width/4
+            y:              parent.height/2
+            color:          Qt.rgba(0,0,0,0.75)
+            visible:        !(QGroundControl.videoManager.decoding2)
+            QGCLabel {
+                text:               qsTr("WAITING FOR VIDEO")
+                font.family:        ScreenTools.demiboldFontFamily
+                color:              "white"
+                font.pointSize:     ScreenTools.largeFontPointSize
+                anchors.centerIn:   parent
+            }
         }
         GstGLVideoItem {
             objectName: "videoContent2"
@@ -87,6 +116,7 @@ ApplicationWindow {
             x: parent.width/4
             y: parent.height/2
             property var receiver
+            visible: QGroundControl.videoManager.decoding2
         }
     }
 

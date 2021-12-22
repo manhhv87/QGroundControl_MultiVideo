@@ -22,9 +22,11 @@ static const char* kFileExtension[VideoReceiver::FILE_FORMAT_MAX - VideoReceiver
     "mp4"
 };
 
-MultiVideoManager::MultiVideoManager(QGCApplication* app, QGCToolbox* toolbox)
+MultiVideoManager::MultiVideoManager(QGCApplication* app, QGCToolbox* toolbox, VideoManager* videoManager)
     : QGCTool(app, toolbox)
-{ }
+{
+    _videoManager = videoManager;
+}
 
 void MultiVideoManager::_setupReceiver(QGCToolbox *toolbox, unsigned int id)
 {
@@ -32,7 +34,6 @@ void MultiVideoManager::_setupReceiver(QGCToolbox *toolbox, unsigned int id)
     connect(_videoReceiver[id], &VideoReceiver::onStartComplete, this, [this, id](VideoReceiver::STATUS status) {
         if (status == VideoReceiver::STATUS_OK) {
            qCDebug(VideoManagerLog) << "Started";
-           _hasVideo[id] = true;
            if (_videoSink[id] != nullptr) {
                 _videoReceiver[id]->startDecoding(_videoSink[id]);
                 qCDebug(VideoManagerLog) << "Decoding";
@@ -44,6 +45,22 @@ void MultiVideoManager::_setupReceiver(QGCToolbox *toolbox, unsigned int id)
        } else {
            // Restart the video (TODO)
        }
+    });
+    connect(_videoReceiver[id], &VideoReceiver::decodingChanged, this, [this, id](bool active){
+        _hasVideo[id] = active;
+        qCDebug(VideoManagerLog) << "Video Reciever " << id  << " : " << active;
+        // FIXME: Hacky way of emitting the decoding changed event
+        switch (id) {
+        case 0:
+            emit _videoManager->decodingChanged0();
+            break;
+        case 1:
+            emit _videoManager->decodingChanged1();
+            break;
+        case 2:
+            emit _videoManager->decodingChanged2();
+            break;
+        }
     });
 }
 
