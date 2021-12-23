@@ -6,6 +6,9 @@
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mavlink/qgroundcontrol?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+**This repository contains a fork implementing multiple video streams in QGroundControl**
+
+The documentation for this fork can be found [here](https://docs.exploredeepwater.com/software/qgroundcontrol.html)
 
 *QGroundControl* (QGC) is an intuitive and powerful ground control station (GCS) for UAVs.
 
