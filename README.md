@@ -10,6 +10,8 @@
 
 The documentation for this fork can be found [here](https://docs.exploredeepwater.com/software/qgroundcontrol.html)
 
+---
+
 *QGroundControl* (QGC) is an intuitive and powerful ground control station (GCS) for UAVs.
 
 The primary goal of QGC is ease of use for both first time and professional users.
