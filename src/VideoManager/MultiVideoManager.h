@@ -20,26 +20,26 @@ class MultiVideoManager : public QGCTool
     Q_OBJECT
 
 public:
-    MultiVideoManager(QGCApplication* app, QGCToolbox* toolbox, VideoManager* videoManager);
+    MultiVideoManager(QGCApplication *app, QGCToolbox *toolbox, VideoManager *videoManager);
 
 public:
-    void init                        ();
-    void startStreaming              ();
-    void stopStreaming               ();
+    void init();
+    void startStreaming();
+    void stopStreaming();
 
-    void startRecording              (const QString& videoFile = QString());
-    void stopRecording               ();
+    void startRecording(const QString &videoFile = QString());
+    void stopRecording();
 
-    virtual void setToolbox (QGCToolbox *toolbox);
+    virtual void setToolbox(QGCToolbox *toolbox);
 
 private:
-    VideoReceiver* _videoReceiver[QGC_MULTI_VIDEO_COUNT] = { nullptr, nullptr, nullptr };
-    void*          _videoSink[QGC_MULTI_VIDEO_COUNT]     = { nullptr, nullptr, nullptr };
-    QString        _videoUri[QGC_MULTI_VIDEO_COUNT]      = { nullptr, nullptr, nullptr };
-    bool           _hasVideo[QGC_MULTI_VIDEO_COUNT]      = { false, false, false };
-    VideoManager*  _videoManager                         = nullptr;
+    VideoReceiver *_videoReceiver[QGC_MULTI_VIDEO_COUNT] = {nullptr, nullptr, nullptr};
+    void *_videoSink[QGC_MULTI_VIDEO_COUNT] = {nullptr, nullptr, nullptr};
+    QString _videoUri[QGC_MULTI_VIDEO_COUNT] = {nullptr, nullptr, nullptr};
+    bool _hasVideo[QGC_MULTI_VIDEO_COUNT] = {false, false, false};
+    VideoManager *_videoManager = nullptr;
 
-    VideoSettings* _videoSettings = nullptr;
+    VideoSettings *_videoSettings = nullptr;
 
     void _setupReceiver(QGCToolbox *toolbox, unsigned int id);
     void _startReceiver(unsigned int id);

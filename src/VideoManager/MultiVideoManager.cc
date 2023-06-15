@@ -16,13 +16,12 @@
 #include "VideoManager.h"
 #include "SettingsManager.h"
 
-static const char* kFileExtension[VideoReceiver::FILE_FORMAT_MAX - VideoReceiver::FILE_FORMAT_MIN] = {
+static const char *kFileExtension[VideoReceiver::FILE_FORMAT_MAX - VideoReceiver::FILE_FORMAT_MIN] = {
     "mkv",
     "mov",
-    "mp4"
-};
+    "mp4"};
 
-MultiVideoManager::MultiVideoManager(QGCApplication* app, QGCToolbox* toolbox, VideoManager* videoManager)
+MultiVideoManager::MultiVideoManager(QGCApplication *app, QGCToolbox *toolbox, VideoManager *videoManager)
     : QGCTool(app, toolbox)
 {
     _videoManager = videoManager;
@@ -31,7 +30,8 @@ MultiVideoManager::MultiVideoManager(QGCApplication* app, QGCToolbox* toolbox, V
 void MultiVideoManager::_setupReceiver(QGCToolbox *toolbox, unsigned int id)
 {
     _videoReceiver[id] = toolbox->corePlugin()->createVideoReceiver(this);
-    connect(_videoReceiver[id], &VideoReceiver::onStartComplete, this, [this, id](VideoReceiver::STATUS status) {
+    connect(_videoReceiver[id], &VideoReceiver::onStartComplete, this, [this, id](VideoReceiver::STATUS status)
+            {
         if (status == VideoReceiver::STATUS_OK) {
            qCDebug(VideoManagerLog) << "Started";
            if (_videoSink[id] != nullptr) {
@@ -44,9 +44,9 @@ void MultiVideoManager::_setupReceiver(QGCToolbox *toolbox, unsigned int id)
            // Already running
        } else {
            // Restart the video (TODO)
-       }
-    });
-    connect(_videoReceiver[id], &VideoReceiver::decodingChanged, this, [this, id](bool active){
+       } });
+    connect(_videoReceiver[id], &VideoReceiver::decodingChanged, this, [this, id](bool active)
+            {
         _hasVideo[id] = active;
         qCDebug(VideoManagerLog) << "Video Reciever " << id  << " : " << active;
         // FIXME: Hacky way of emitting the decoding changed event
@@ -60,22 +60,26 @@ void MultiVideoManager::_setupReceiver(QGCToolbox *toolbox, unsigned int id)
         case 2:
             emit _videoManager->decodingChanged2();
             break;
-        }
-    });
+        } });
 }
 
 void MultiVideoManager::_startReceiver(unsigned int id)
 {
-    if (_videoReceiver[id] != nullptr) {
-        if (!_videoUri[id].isEmpty()) {
+    if (_videoReceiver[id] != nullptr)
+    {
+        if (!_videoUri[id].isEmpty())
+        {
             _videoReceiver[id]->start(_videoUri[id], 1000, 0);
         }
     }
 }
 
-void MultiVideoManager::_stopReceiver(unsigned int id) {
-    if (_videoReceiver[id] != nullptr) {
-        if (!_videoUri[id].isEmpty()) {
+void MultiVideoManager::_stopReceiver(unsigned int id)
+{
+    if (_videoReceiver[id] != nullptr)
+    {
+        if (!_videoUri[id].isEmpty())
+        {
             _videoReceiver[id]->stop();
         }
     }
@@ -98,38 +102,43 @@ void MultiVideoManager::setToolbox(QGCToolbox *toolbox)
     connect(_videoSettings->udpPort1(), &Fact::rawValueChanged, this, &MultiVideoManager::_udpPortChanged);
     connect(_videoSettings->udpPort2(), &Fact::rawValueChanged, this, &MultiVideoManager::_udpPortChanged);
 
-    for (int i = 0; i < QGC_MULTI_VIDEO_COUNT; i++) {
+    for (int i = 0; i < QGC_MULTI_VIDEO_COUNT; i++)
+    {
         _setupReceiver(toolbox, i);
     }
 }
 
 void MultiVideoManager::init()
 {
-    QQuickWindow* root = qgcApp()->multiVideoWindow();
+    QQuickWindow *root = qgcApp()->multiVideoWindow();
 
     _updateVideoURI(0, _videoSettings->udpPort0()->rawValue().toInt());
     _updateVideoURI(1, _videoSettings->udpPort1()->rawValue().toInt());
     _updateVideoURI(2, _videoSettings->udpPort2()->rawValue().toInt());
 
-    if (root == nullptr) {
+    if (root == nullptr)
+    {
         qCDebug(VideoManagerLog) << "multiVideoWindow() failed. No multi-video window";
         return;
     }
 
-    QQuickItem* widget;
-    for (int i = 0; i < QGC_MULTI_VIDEO_COUNT; i++) {
-        widget = root->findChild<QQuickItem*>(QStringLiteral("videoContent%1").arg(i));
+    QQuickItem *widget;
+    for (int i = 0; i < QGC_MULTI_VIDEO_COUNT; i++)
+    {
+        widget = root->findChild<QQuickItem *>(QStringLiteral("videoContent%1").arg(i));
         _videoSink[i] = qgcApp()->toolbox()->corePlugin()->createVideoSink(this, widget);
         _startReceiver(i);
     }
 }
 
-void MultiVideoManager::startRecording(const QString &videoFile) {
+void MultiVideoManager::startRecording(const QString &videoFile)
+{
     // TODO: check if receiver is ready
 
     const VideoReceiver::FILE_FORMAT fileFormat = static_cast<VideoReceiver::FILE_FORMAT>(_videoSettings->recordingFormat()->rawValue().toInt());
 
-    if(fileFormat < VideoReceiver::FILE_FORMAT_MIN || fileFormat >= VideoReceiver::FILE_FORMAT_MAX) {
+    if (fileFormat < VideoReceiver::FILE_FORMAT_MIN || fileFormat >= VideoReceiver::FILE_FORMAT_MAX)
+    {
         qgcApp()->showAppMessage(tr("Invalid video format defined."));
         return;
     }
@@ -139,20 +148,22 @@ void MultiVideoManager::startRecording(const QString &videoFile) {
 
     QString savePath = qgcApp()->toolbox()->settingsManager()->appSettings()->videoSavePath();
 
-    if (savePath.isEmpty()) {
+    if (savePath.isEmpty())
+    {
         qgcApp()->showAppMessage(tr("Unabled to record video. Video save path must be specified in Settings."));
         return;
     }
 
     // TODO: check for videoStarted
 
-    for (int i = 0; i < QGC_MULTI_VIDEO_COUNT; i++) {
-        if (!_hasVideo[i]) {
+    for (int i = 0; i < QGC_MULTI_VIDEO_COUNT; i++)
+    {
+        if (!_hasVideo[i])
+        {
             qCDebug(VideoManagerLog) << "Does not have video";
             continue;
         }
-        QString _videoFile = savePath + "/"
-                + (videoFile.isEmpty() ? QDateTime::currentDateTime().toString("yyyy-MM-dd_hh.mm.ss") : videoFile);
+        QString _videoFile = savePath + "/" + (videoFile.isEmpty() ? QDateTime::currentDateTime().toString("yyyy-MM-dd_hh.mm.ss") : videoFile);
         QDir dir(QStringLiteral("%1").arg(_videoFile));
         if (!dir.exists())
             dir.mkpath(".");
@@ -163,22 +174,27 @@ void MultiVideoManager::startRecording(const QString &videoFile) {
     }
 }
 
-void MultiVideoManager::stopRecording() {
-    for (int i = 0; i < QGC_MULTI_VIDEO_COUNT; i++) {
+void MultiVideoManager::stopRecording()
+{
+    for (int i = 0; i < QGC_MULTI_VIDEO_COUNT; i++)
+    {
         _videoReceiver[i]->stopRecording();
     }
 }
 
-void MultiVideoManager::_restartVideo(unsigned int id) {
+void MultiVideoManager::_restartVideo(unsigned int id)
+{
     _stopReceiver(id);
     _startReceiver(id);
 }
 
-void MultiVideoManager::_udpPortChanged() {
+void MultiVideoManager::_udpPortChanged()
+{
     _updateVideoURI(0, _videoSettings->udpPort0()->rawValue().toInt());
     _updateVideoURI(1, _videoSettings->udpPort1()->rawValue().toInt());
     _updateVideoURI(2, _videoSettings->udpPort2()->rawValue().toInt());
-    for (int i = 0; i < QGC_MULTI_VIDEO_COUNT; i++) {
+    for (int i = 0; i < QGC_MULTI_VIDEO_COUNT; i++)
+    {
         _restartVideo(i);
     }
 }
